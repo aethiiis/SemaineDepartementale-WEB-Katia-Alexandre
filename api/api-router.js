@@ -102,7 +102,7 @@ api.put("/unlike/:beepId", async (req, res) => {
   }
 });
 
-api.put("/response/:beepId", async (req, res) => {
+api.post("/response/:beepId", async (req, res) => {
   try  {
     const postedResponse = await postResponse(req.user.id, req.params.beepId, req.body.content);
     res.status(201).json(postedResponse);
