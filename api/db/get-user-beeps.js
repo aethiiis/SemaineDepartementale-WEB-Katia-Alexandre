@@ -1,6 +1,6 @@
 import { queryNormalized } from "./connection-pool.js";
 
-export async function getUserBeeps(activeUserId, viewedUserId) {
+export async function getUserBeeps(activeUserId, viewedUserId, Nb) {
   return await queryNormalized(
     `SELECT 
       beep.id, 
@@ -20,7 +20,7 @@ export async function getUserBeeps(activeUserId, viewedUserId) {
     ORDER BY 
       created_at DESC 
     LIMIT 
-      10`,
-    [viewedUserId, activeUserId]
+      $3`,
+    [viewedUserId, activeUserId, Nb]
   );
 }

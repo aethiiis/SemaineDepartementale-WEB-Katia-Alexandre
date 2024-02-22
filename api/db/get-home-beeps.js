@@ -1,6 +1,6 @@
 import { queryNormalized } from "./connection-pool.js";
 
-export async function getHomeBeeps(userId) {
+export async function getHomeBeeps(userId, Nb) {
   return await queryNormalized(
     `
     WITH home_beep AS (
@@ -43,8 +43,8 @@ export async function getHomeBeeps(userId) {
     ORDER BY 
       created_at DESC 
     LIMIT 
-      10
+      $2
     `,
-    [userId]
+    [userId, Nb]
   );
 }

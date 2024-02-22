@@ -12,18 +12,26 @@ class BeeperHome extends BeeperBase {
     beepList: {
       state: true,
     },
+    NbLoaded: true,
+    NbBeeps: true
   };
 
   constructor() {
     super();
     this.beepList = [];
+    this.NbBeeps = 0;
     this.userName = "";
+    this.NbLoaded = 10;
   }
 
   async connectedCallback() {
     super.connectedCallback();
-    const response = await fetch("/api/home");
+    const response = await fetch(`/api/home/${this.NbLoaded}`);
     this.beepList = await response.json();
+
+    const response2 = await fetch(`/api/NbBeepsHome/`);
+    const tmp = await response2.json();
+    this.NbBeeps = tmp[0].count;
 
     this.userName = (await getActiveUserProfile()).name;
   }
@@ -53,6 +61,13 @@ class BeeperHome extends BeeperBase {
     }
   }
 
+  async infiniteScroll() {
+    if (this.NbBeeps - this.NbLoaded > 0) {
+      this.NbLoaded += 10;
+      await this.connectedCallback();
+    }
+  }
+
   render() {
     return html` <beeper-header></beeper-header>
       <h1>Welcome ${this.userName}!</h1>
@@ -67,9 +82,19 @@ class BeeperHome extends BeeperBase {
         width: 100%;
         height: 64px;
         margin: 10px 0 20px 0;
+        padding: 10px 10px;
+        border-radius: 10px;
+        background-color: #f8f8f8;
+        resize: none;
       }
     `,
   ];
 }
 
 customElements.define("beeper-home", BeeperHome);
+
+document.addEventListener('scroll', event => {
+  if (Math.abs(document.body.scrollHeight - (window.scrollY + window.innerHeight)) < 50) {
+      document.querySelector("beeper-home").infiniteScroll();
+  }
+});

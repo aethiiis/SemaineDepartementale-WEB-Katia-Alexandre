@@ -12,19 +12,21 @@ class UserPage extends BeeperBase {
     isSelf: {
       state: true,
     },
+    NbLoaded: true,
   };
 
   constructor() {
     super();
     this.userInfo = null;
     this.isSelf = true;
+    this.NbLoaded = 10;
   }
 
   async connectedCallback() {
     super.connectedCallback();
     const splitPath = window.location.pathname.split("/");
     const viewedUserName = splitPath[splitPath.length - 1];
-    const response = await fetch(`/api/user/${viewedUserName}`);
+    const response = await fetch(`/api/user/${viewedUserName}/${this.NbLoaded}`);
     this.userInfo = await response.json();
 
     this.isSelf =
@@ -43,6 +45,11 @@ class UserPage extends BeeperBase {
       });
       this.userInfo = { ...this.userInfo, followed: true };
     }
+  }
+
+  async infiniteScroll() {
+    this.NbLoaded += 10;
+    await this.connectedCallback();
   }
 
   render() {
