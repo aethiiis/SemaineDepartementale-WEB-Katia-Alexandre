@@ -10,7 +10,9 @@ export class BeepView extends BeeperBase {
     rebeepList: {
       state: true,
     },
-    nbLoaded: true
+    nbLoaded: true,
+    unroll: true,
+    messageButton: true,
   };
 
   constructor() {
@@ -18,6 +20,7 @@ export class BeepView extends BeeperBase {
     this.rebeepList = [];
     this.show_reply_textarea = "visible";
     this.nbLoaded = 10;
+    this.unroll = true;
   }
 
   async connectedCallback() {
@@ -55,6 +58,14 @@ export class BeepView extends BeeperBase {
       this.show_reply_textarea = "hidden";
     }
  }
+
+  unrollResponses() {
+    if (this.unroll) {
+      this.unroll = false;
+    } else {
+      this.unroll = true;
+    }
+  }
 
   async postRebeep(event) {
     if (event.code === "Enter" && !event.getModifierState("Shift")) {
@@ -121,7 +132,14 @@ export class BeepView extends BeeperBase {
         <textarea id="reply-textarea-${this.beep.id}" @keyup=${this.postRebeep}></textarea>
         </div>
     </div>
-    <rebeep-list rebeepList=${JSON.stringify(this.rebeepList)}></rebeep-list>`;
+    <span class="responses ${this.unroll ? "rolled" : ""}">
+      <rebeep-list rebeepList=${JSON.stringify(this.rebeepList)}></rebeep-list>
+    </span>
+    <div class="button-container">
+      <span class="response-visibility ${(this.rebeepList.length == 0) ? "rolled" : ""}">
+        <button type="button" class="response-button" @click=${this.unrollResponses}>${this.unroll ? `Afficher les réponses (${this.rebeepList.length})` : "Masquer les réponses" }</button>
+      </span>
+    </div>`;
   }
 
   static styles = [
@@ -165,6 +183,20 @@ export class BeepView extends BeeperBase {
         font-weight: bold;
       }
 
+      .rolled {
+        display: none;
+      }
+
+      .response-button {
+        text-align: center;
+      }
+
+      .button-container {
+        width:100%;
+        display: flex;
+        justify-content: center;
+      }
+
       .reply-box {
         visibility: hidden;
         padding: 5px;
@@ -172,6 +204,10 @@ export class BeepView extends BeeperBase {
         display: flex;
         align-items: center;
         justify-content: flex-end;
+      }
+
+      .btn btn-outline-info {
+        font-size: 14px;
       }
 
       .beep:hover .reply-box{
@@ -188,6 +224,20 @@ export class BeepView extends BeeperBase {
 
       .label-reply {
         margin-right: 10px;
+      }
+
+      button {
+        background-color: #B1C6DA;
+        border: none;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }
+
+      button:hover {
+        background-color: #8BA0BD;
       }
     `,
   ];

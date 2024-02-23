@@ -43,6 +43,9 @@ class BeeperHome extends BeeperBase {
       let content = textarea.value;
       content = content.slice(0, content.length - 1);
 
+      this.NbLoaded = 0;
+      await this.connectedCallback();
+      
       const response = await fetch("/api/beep", {
         method: "POST",
         headers: {
@@ -58,6 +61,8 @@ class BeeperHome extends BeeperBase {
       textarea.value = "";
 
       this.beepList = [postedBeep, ...this.beepList];
+      this.NbLoaded = 10;
+      await this.connectedCallback();
     }
   }
 
@@ -71,7 +76,7 @@ class BeeperHome extends BeeperBase {
   render() {
     return html` <beeper-header></beeper-header>
       <h1>Welcome ${this.userName}!</h1>
-      <textarea @keyup=${this.postBeep}></textarea>
+      <textarea @keyup=${this.postBeep} placeholder="Type your message here..."></textarea>
       <beep-list beepList=${JSON.stringify(this.beepList)}></beep-list>`;
   }
 
