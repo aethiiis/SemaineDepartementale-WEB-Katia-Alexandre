@@ -4,7 +4,7 @@
 (testées sous Opera (Chromium) et Firefox)
 
 ### Réponses aux beeps
-Lors du survol d'un beep avec la souris, une boîte de texte apparaît pour taper une réponse. Les réponses peuvent êtres likées comme les beeps. On peut dérouler la liste des réponses et voir le nombre de réponses avant de dérouler.
+Lors du survol d'un beep avec la souris, une boîte de texte apparaît pour taper une réponse. Les réponses peuvent êtres likées comme les beeps. On peut dérouler la liste des réponses et voir le nombre de réponses avant de dérouler. Ceci a impliqué la création de deux nouvelles tables : response, ayant les mêmes clés que beep mais avec une clé "beep_id" en plus, correspondant à l'id du beep auquel on répond ; et liked_response, identique à liked mais où "beep_id" est remplacé par "response_id".
 
 ### Scroll infini
 Lorsque l'on fait défiler la page vers le bas, la page charge automatiquement les beeps suivants ainsi que leurs réponses éventuelles.
